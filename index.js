@@ -37,6 +37,25 @@ function applyColors(colors) {
     }
 }
 
+// --- Apply Hero Display settings from config ---------------------------------
+function applyHeroDisplay(heroDisplay) {
+    if (!heroDisplay) return;
+    const root = document.documentElement.style;
+    const map = {
+        overlayOpacityTop:    '--hero-overlay-top',
+        overlayOpacityMiddle: '--hero-overlay-mid',
+        overlayOpacityBottom: '--hero-overlay-bot',
+        imageBrightness:      '--hero-brightness',
+        imageContrast:        '--hero-contrast',
+    };
+    for (const [key, cssVar] of Object.entries(map)) {
+        if (heroDisplay[key] != null) root.setProperty(cssVar, heroDisplay[key]);
+    }
+    if (heroDisplay.crossfadeMs || (heroDisplay === undefined)) {
+        // crossfadeMs comes from landingSlideshow — handled there
+    }
+}
+
 function hexToRgba(hex, alpha) {
     hex = hex.replace('#', '');
     if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
@@ -250,18 +269,23 @@ function initMobileMenu() {
 }
 
 // --- Navbar Scroll Effect ----------------------------------------------------
-function initNavbarScroll() {
+function initNavbarScroll(scrollThreshold) {
     const navbar = $('navbar');
     if (!navbar) return;
+    const threshold = scrollThreshold || 80;
 
     const onScroll = () => {
-        navbar.classList.toggle('scrolled', window.scrollY > 60);
+        navbar.classList.toggle('scrolled', window.scrollY > threshold);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 }
 
 // --- Smooth Scroll -----------------------------------------------------------
+// Temporarily disables scroll-snap during programmatic scrolling so the snap
+// doesn't fight the smooth scroll animation.
+let _snapEnabled = true;  // updated by applyScrollSnap
+
 function initSmoothScroll() {
     document.addEventListener('click', e => {
         const link = e.target.closest('a[href^="#"]');
@@ -270,43 +294,91 @@ function initSmoothScroll() {
         const target = document.querySelector(link.getAttribute('href'));
         if (target) {
             e.preventDefault();
+
+            if (_snapEnabled) {
+                // Disable snap while the smooth scroll is in flight
+                document.documentElement.style.scrollSnapType = 'none';
+
+                // Re-enable snap once scrolling finishes
+                const reEnable = () => {
+                    document.documentElement.style.scrollSnapType = '';
+                };
+
+                // Use scrollend if available, with a safety fallback
+                if ('onscrollend' in window) {
+                    const handler = () => {
+                        reEnable();
+                        document.removeEventListener('scrollend', handler);
+                    };
+                    document.addEventListener('scrollend', handler, { once: true });
+                    // Safety fallback in case scrollend never fires
+                    setTimeout(reEnable, 2000);
+                } else {
+                    setTimeout(reEnable, 1500);
+                }
+            }
+
             target.scrollIntoView({ behavior: 'smooth' });
         }
     });
 }
 
 // --- Landing Background Crossfade --------------------------------------------
+// The bottom layer (bgA) always shows the current image at full opacity.
+// The top layer (bgB) fades in with the NEXT image. Once the crossfade
+// finishes, bgA adopts the new image and bgB hides instantly — so there
+// is never a moment where both layers are transparent (no gray flash).
 function initLandingSlideshow(cfg) {
-    const bgA = $('landing-bg');
-    const bgB = $('landing-bg-next');
+    const bgA = $('landing-bg');       // bottom layer — always opacity 1
+    const bgB = $('landing-bg-next');  // top layer — fades in over bgA
     if (!bgA || !bgB) return;
 
     const slideshow = cfg.landingSlideshow || {};
     const urls = slideshow.images || ['land_imgs/1.jpg', 'land_imgs/2.jpg', 'land_imgs/3.jpg'];
     const interval = slideshow.intervalMs || 6000;
+    const transitionMs = slideshow.crossfadeMs || 1800;
 
-    // Preload images
+    // Apply crossfade duration to CSS variable
+    document.documentElement.style.setProperty('--hero-crossfade-ms', transitionMs + 'ms');
+
+    if (urls.length < 2) {
+        bgA.style.backgroundImage = `url('${urls[0] || ''}')`;
+        return;
+    }
+
+    // Preload all images
     urls.forEach(url => { new Image().src = url; });
 
     let index = 0;
-    let showingA = true;
+    let transitioning = false;
 
     bgA.style.backgroundImage = `url('${urls[0]}')`;
+    bgA.style.opacity = '1';
+    bgB.style.opacity = '0';
 
     setInterval(() => {
-        index = (index + 1) % urls.length;
-        const nextUrl = `url('${urls[index]}')`;
+        if (transitioning) return;
+        transitioning = true;
 
-        if (showingA) {
-            bgB.style.backgroundImage = nextUrl;
-            bgB.style.opacity = '1';
-            bgA.style.opacity = '0';
-        } else {
-            bgA.style.backgroundImage = nextUrl;
-            bgA.style.opacity = '1';
+        index = (index + 1) % urls.length;
+
+        // Set the next image on the TOP layer and fade it in
+        bgB.style.backgroundImage = `url('${urls[index]}')`;
+        bgB.style.opacity = '1';
+
+        // After transition completes, copy the image to the bottom layer
+        // and instantly hide the top layer (no visible change to the user).
+        setTimeout(() => {
+            bgA.style.backgroundImage = `url('${urls[index]}')`;
+            // Instantly hide top layer (disable transition briefly)
+            bgB.style.transition = 'none';
             bgB.style.opacity = '0';
-        }
-        showingA = !showingA;
+            // Force reflow so the instant hide takes effect
+            void bgB.offsetHeight;
+            // Re-enable transition for the next crossfade
+            bgB.style.transition = '';
+            transitioning = false;
+        }, transitionMs + 50);
     }, interval);
 }
 
@@ -364,11 +436,20 @@ function initScrollReveal() {
     revealTargets.forEach(el => observer.observe(el));
 }
 
+// --- Apply Scroll Snap setting -----------------------------------------------
+function applyScrollSnap(cfg) {
+    const snap = cfg.scrollSnap;
+    if (snap && snap.enabled === false) {
+        _snapEnabled = false;
+        // Disable scroll-snap that CSS applies by default
+        document.documentElement.style.scrollSnapType = 'none';
+    }
+}
+
 // --- Init: Load config then build everything ---------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     // These don't depend on config
     initMobileMenu();
-    initNavbarScroll();
     initSmoothScroll();
 
     // Load config and build all dynamic content
@@ -376,6 +457,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(r => r.ok ? r.json() : Promise.reject(r.status))
         .then(cfg => {
             applyColors(cfg.colors);
+            applyHeroDisplay(cfg.heroDisplay);
+            applyScrollSnap(cfg);
             renderLanding(cfg);
             renderMapSection(cfg);
             renderAboutUs(cfg);
@@ -388,12 +471,17 @@ document.addEventListener('DOMContentLoaded', () => {
             renderFooter(cfg);
             initLandingSlideshow(cfg);
 
+            // Navbar scroll needs heroDisplay config for threshold
+            const scrollThreshold = cfg.heroDisplay?.navbarScrollThreshold;
+            initNavbarScroll(scrollThreshold);
+
             // Scroll reveal must run after content is built
             initScrollReveal();
         })
         .catch(err => {
             console.error('Failed to load siteConfig.json:', err);
             // Graceful fallback — still init slideshow and reveal
+            initNavbarScroll();
             initLandingSlideshow({});
             initScrollReveal();
         });

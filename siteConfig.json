@@ -3,15 +3,15 @@
 
     "colors": {
         "_help": "Change these to change the colors across the entire website. Use any CSS color (e.g. #3d6b8e, rgb(61,107,142), etc). Google 'color picker' to find colors you like.",
-        "primary": "#3d6b8e",
-        "primaryHover": "#2d5470",
-        "primaryLight": "#e9f0f5",
-        "accent": "#c49a5c",
-        "accentHover": "#b08545",
+        "primary": "#4882c2",
+        "primaryHover": "#396ba2",
+        "primaryLight": "#e1eaf4",
+        "accent": "#71cde2",
+        "accentHover": "#5bbbd2",
         "dark": "#1e293b",
         "darkSoft": "#334155",
-        "surface": "#f8f7f4",
-        "surfaceAlt": "#f0eeea",
+        "surface": "#f4f8fa",
+        "surfaceAlt": "#eaf2f6",
         "text": "#475569",
         "textLight": "#94a3b8",
         "footerBackground": "#1e293b"
@@ -26,7 +26,7 @@
         "phone": "+1 404-993-7984",
         "email": "connect@lifelinechurchatlanta.org",
         "address": "829 Atlanta Highway, Cumming, GA 30040",
-        "copyrightYear": "2025"
+        "copyrightYear": "2026"
     },
 
     "welcomeSection": {
@@ -141,12 +141,28 @@
     },
 
     "landingSlideshow": {
-        "_help": "Settings for the background slideshow on the homepage hero. 'images' is a list of image file paths in the 'land_imgs' folder. 'intervalMs' is how long each image shows (in milliseconds — 6000 = 6 seconds).",
+        "_help": "Settings for the background slideshow on the homepage hero. 'images' is a list of image file paths in the 'land_imgs' folder. 'intervalMs' is how long each image shows (in milliseconds — 6000 = 6 seconds). 'crossfadeMs' is the transition speed between images.",
         "images": [
             "land_imgs/1.jpg",
             "land_imgs/2.jpg",
             "land_imgs/3.jpg"
         ],
-        "intervalMs": 6000
+        "intervalMs": 6000,
+        "crossfadeMs": 1800
+    },
+
+    "heroDisplay": {
+        "_help": "Controls how the hero section looks. 'overlayOpacityTop/Middle/Bottom' control how dark the overlay is at the top, center, and bottom of the hero (0 = transparent, 1 = fully black). Increase these if text is hard to read over the photos. 'imageBrightness' boosts dark photos (1.0 = no change, 1.2 = 20% brighter). 'imageContrast' adjusts contrast (1.0 = normal). 'navbarScrollThreshold' is how many pixels you scroll before the navbar turns solid white.",
+        "overlayOpacityTop": 0.55,
+        "overlayOpacityMiddle": 0.40,
+        "overlayOpacityBottom": 0.65,
+        "imageBrightness": 0.7,
+        "imageContrast": 0.95,
+        "navbarScrollThreshold": 80
+    },
+
+    "scrollSnap": {
+        "_help": "Controls full-page scroll locking. When 'enabled' is true, scrolling will lock onto each section one at a time. Set to false for normal free scrolling.",
+        "enabled": true
     }
 }
