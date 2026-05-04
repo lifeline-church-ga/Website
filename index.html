@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lifeline Church Atlanta — Reaching the unreached, Churching the unchurched. Join us Sundays at 5 PM for Telugu and English worship in Cumming, GA.">
     <title>Lifeline Church Atlanta</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,13 +12,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <header class="navbar">
+    <header class="navbar" id="navbar">
         <div class="container navbar-container">
             <div class="navbar-left">
-                <img src="icons/logo.jpg" alt="Lifeline Church Logo" loading="lazy" class="logo">
+                <img src="icons/logo.jpg" alt="Lifeline Church Logo" width="50" height="50" class="logo">
                 <a href="#landing" class="navbar-title">Lifeline Church</a>
             </div>
-            <nav class="navbar-right">
+            <nav class="navbar-right" id="desktop-nav">
                 <a href="#map" class="nav-link">Location</a>
                 <a href="#about-us" class="nav-link">About Us</a>
                 <a href="#photos" class="nav-link">Photos</a>
@@ -25,55 +26,47 @@
                 <a href="#ministries" class="nav-link">Ministries</a>
                 <a href="#give" class="nav-link">Give</a>
             </nav>
-            <div class="mobile-menu-btn">
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
                 <i class="fas fa-bars"></i>
-            </div>
+            </button>
         </div>
-        <div class="mobile-nav">
+        <nav class="mobile-nav" id="mobile-nav">
             <a href="#map" class="nav-link">Location</a>
             <a href="#about-us" class="nav-link">About Us</a>
             <a href="#photos" class="nav-link">Photos</a>
             <a href="#events" class="nav-link">Schedule</a>
             <a href="#ministries" class="nav-link">Ministries</a>
             <a href="#give" class="nav-link">Give</a>
-        </div>
+        </nav>
     </header>
 
     <section id="landing" class="landing-section">
+        <div class="landing-bg" id="landing-bg"></div>
+        <div class="landing-bg" id="landing-bg-next"></div>
+        <div class="landing-overlay"></div>
         <div class="container landing-content">
-            <h1>Lifeline Church Atlanta</h1>
-            <p>Reaching the unreached, Churching the unchurched</p>
-            <p>Join us for our Telugu and English Worship Service every Sunday at 5 PM</p>
-            <p><strong>Sundays at 5 PM</strong></p>
+            <!-- Populated from siteConfig.json -->
         </div>
     </section>
 
     <section id="map" class="section">
         <div class="container map-container">
             <div class="map-details">
-                <h2>WELCOME TO LIFELINE</h2>
-                <h3>SUNDAY SCHEDULE:</h3>
-                <p>5 PM — Telugu and English Worship Service</p>
-                <h3>ADDRESS:</h3>
-                <p>Lifeline Church<br>829 Atlanta Highway, Cumming, GA 30040</p>
-                <p><i class="fas fa-phone-alt"></i> +1 404-993-7984</p>
-                <p><i class="fas fa-envelope"></i> <a href="mailto:connect@lifelinechurchatlanta.org">connect@lifelinechurchatlanta.org</a></p>
+                <!-- Populated from siteConfig.json -->
             </div>
             <div class="map-embed">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3301.902224410228!2d-84.1384286847822!3d34.14897498057969!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88f585579a421133%3A0x6955a15a07c00b0!2s829%20Atlanta%20Hwy%2C%20Cumming%2C%20GA%2030040!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
+                <iframe src="" allowfullscreen="" loading="lazy" title="Church location map"></iframe>
             </div>
         </div>
     </section>
 
-    <section id="about-us" class="section section-light-blue">
+    <section id="about-us" class="section section-alt">
         <div class="container about-container">
             <div class="about-images">
-                <img src="abt_us_imgs/1.jpg" alt="Church community" loading="lazy">
-                <img src="abt_us_imgs/2.png" alt="Pastor preaching" loading="lazy">
+                <!-- Populated from siteConfig.json -->
             </div>
             <div class="about-text">
-                <h2>About Us</h2>
-                <p>Lifeline Church is a group of Jesus followers who love God and care about people. We strive to be a channel of Jesus' love to the hurting world around us. Our goal is to build people's spiritual lives and meet their needs through worship, prayer, discipleship, teaching, missions, and church planting.</p>
+                <!-- Populated from siteConfig.json -->
             </div>
         </div>
     </section>
@@ -86,63 +79,31 @@
         </div>
     </section>
 
-    <section id="events" class="section section-light-blue">
+    <section id="events" class="section section-alt">
         <div class="container text-center">
             <h2>Upcoming Events</h2>
-            <div class="events-container"></div>
+            <div class="events-container" id="events-container"></div>
         </div>
     </section>
 
     <section id="ministries" class="section">
         <div class="container ministries-container">
             <div class="ministries-text">
-                <h2>Happening at Lifeline</h2>
-                <p>Stay connected with our latest sermons and special events. Watch our live stream every Sunday to be a part of our worship experience, no matter where you are.</p>
-                <div class="ministries-links">
-                    <a href="https://www.youtube.com/@LifelineChurchAtlantaGA/streams" target="_blank" class="ministries-link">YouTube Livestream Link</a>
-                    <a href="https://www.facebook.com/profile.php?id=100064841432162&sk=live_videos" target="_blank" class="ministries-link">Facebook Livestream Link</a>
-                </div>
+                <!-- Populated from siteConfig.json -->
             </div>
-            <div class="video-container"></div>
+            <div class="video-container" id="video-container"></div>
         </div>
     </section>
 
-    <section id="give" class="section section-light-blue text-center">
+    <section id="give" class="section section-alt text-center">
         <div class="container">
-            <h2>Give</h2>
-            <p>Your generous support helps us reach the unreached with the Gospel of Jesus Christ.</p>
-            <div class="give-options">
-                <div class="give-box">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h3>By Text</h3>
-                    <p>Text 'Give' to 1-855-790-7485</p>
-                </div>
-                <div class="give-box">
-                    <i class="fas fa-envelope-open-text"></i>
-                    <h3>By Check</h3>
-                    <p>Make payable to 'Lifeline Church' and mail to our address.</p>
-                </div>
-                <div class="give-box">
-                    <i class="fas fa-desktop"></i>
-                    <h3>Online</h3>
-                    <a href="https://tithe.ly/give_new/www/#/tithely/give-one-time/1293597" target="_blank" class="btn btn-primary">GIVE ONLINE</a>
-                </div>
-            </div>
+            <!-- Populated from siteConfig.json -->
         </div>
     </section>
 
     <footer class="footer">
         <div class="container footer-container">
-            <div class="footer-info">
-                <p>© 2025 Lifeline Church Atlanta. All Rights Reserved.</p>
-                <p>829 Atlanta Highway, Cumming, GA 30040</p>
-            </div>
-            <div class="footer-social">
-                <a href="https://www.facebook.com/p/Lifeline-Church-Atlanta-Cumming-100064841432162/" target="_blank" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.instagram.com/lifelinechurchatlanta/" target="_blank" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.youtube.com/@LifelineChurchAtlantaGA" target="_blank" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                <a href="mailto:connect@lifelinechurchatlanta.org" class="social-icon" aria-label="Email"><i class="fas fa-envelope"></i></a>
-            </div>
+            <!-- Populated from siteConfig.json -->
         </div>
     </footer>
 

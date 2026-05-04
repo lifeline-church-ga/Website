@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Photo gallery — Lifeline Church Atlanta community moments.">
     <title>Photo Gallery - Lifeline Church Atlanta</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +15,7 @@
     <header class="navbar">
         <div class="container navbar-container">
             <div class="navbar-left">
-                <img src="icons/logo.jpg" alt="Lifeline Church Logo" loading="lazy" class="logo">
+                <img src="icons/logo.jpg" alt="Lifeline Church Logo" width="50" height="50" class="logo">
                 <a href="index.html" class="navbar-title">Lifeline Church</a>
             </div>
             <nav class="navbar-right">
@@ -25,16 +26,24 @@
                 <a href="index.html#ministries" class="nav-link">Ministries</a>
                 <a href="index.html#give" class="nav-link">Give</a>
             </nav>
-            <div class="mobile-menu-btn">
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
                 <i class="fas fa-bars"></i>
-            </div>
+            </button>
         </div>
+        <nav class="mobile-nav" id="mobile-nav">
+            <a href="index.html#map" class="nav-link">Location</a>
+            <a href="index.html#about-us" class="nav-link">About Us</a>
+            <a href="index.html#photos" class="nav-link">Photos</a>
+            <a href="index.html#events" class="nav-link">Schedule</a>
+            <a href="index.html#ministries" class="nav-link">Ministries</a>
+            <a href="index.html#give" class="nav-link">Give</a>
+        </nav>
     </header>
 
     <section class="photo-page-header">
         <div class="container">
             <a href="index.html#photos" class="back-link"><i class="fas fa-arrow-left"></i> Back to Main Gallery</a>
-            <h1 id="folder-name"></h1>
+            <h1 id="folder-name">Gallery</h1>
         </div>
     </section>
 
@@ -42,111 +51,170 @@
         <div class="photo-gallery-grid" id="photo-container"></div>
     </main>
 
-    <div id="fullscreenModal" class="fullscreen-modal">
-        <span class="close-btn">&times;</span>
-        <span class="nav-arrow prev">&#10094;</span>
-        <img id="fullscreenImage" class="fullscreen-image" src="" alt="Fullscreen Image">
-        <span class="nav-arrow next">&#10095;</span>
+    <div id="fullscreen-modal" class="fullscreen-modal">
+        <button class="close-btn" id="lightbox-close" aria-label="Close">&times;</button>
+        <button class="nav-arrow prev" id="lightbox-prev" aria-label="Previous">&#10094;</button>
+        <img id="fullscreen-image" class="fullscreen-image" src="" alt="Fullscreen photo">
+        <button class="nav-arrow next" id="lightbox-next" aria-label="Next">&#10095;</button>
     </div>
 
     <footer class="footer">
-        <div class="container footer-container">
-            <div class="footer-info">
-                <p>© 2025 Lifeline Church Atlanta. All Rights Reserved.</p>
-                <p>829 Atlanta Highway, Cumming, GA 30040</p>
-            </div>
-            <div class="footer-social">
-                <a href="https://facebook.com" target="_blank" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://instagram.com" target="_blank" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://youtube.com" target="_blank" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                <a href="mailto:connect@lifelinechurch.com" class="social-icon" aria-label="Email"><i class="fas fa-envelope"></i></a>
-            </div>
+        <div class="container footer-container" id="footer-container">
+            <!-- Populated from siteConfig.json -->
         </div>
     </footer>
 
     <script>
-        const photoCategories = {
-            'Worship Services': { folder: 'cat1', fileCount: 2 }, 
-            'Community Events': { folder: 'cat2', fileCount: 2 }, 
-            'Youth Activities': { folder: 'cat3', fileCount: 2 }, 
-        };
+    /* ================================================================
+       Photos Page — reads gallery.json for actual filenames
+       + reads siteConfig.json for colors and footer content
+       ================================================================ */
+    (() => {
+        const $ = id => document.getElementById(id);
 
-        let currentIndex = 0;
+        const params = new URLSearchParams(window.location.search);
+        const folderParam = params.get('folder');
+        const nameParam = params.get('name');
+
+        const photoContainer = $('photo-container');
+        const folderHeader = $('folder-name');
+        const modal = $('fullscreen-modal');
+        const fullImg = $('fullscreen-image');
+
         let imagePaths = [];
+        let currentIndex = 0;
 
-        const elements = {
-            photoContainer: document.getElementById('photo-container'),
-            folderNameHeader: document.getElementById('folder-name'),
-            modal: document.getElementById('fullscreenModal'),
-            fullscreenImage: document.getElementById('fullscreenImage'),
-            closeBtn: document.querySelector('.close-btn'),
-            prevBtn: document.querySelector('.prev'),
-            nextBtn: document.querySelector('.next')
-        };
+        // --- Mobile menu ---
+        const menuBtn = $('mobile-menu-btn');
+        const mobileNav = $('mobile-nav');
+        if (menuBtn && mobileNav) {
+            menuBtn.addEventListener('click', () => mobileNav.classList.toggle('active'));
+            mobileNav.addEventListener('click', e => {
+                if (e.target.classList.contains('nav-link')) mobileNav.classList.remove('active');
+            });
+        }
 
-        function initializeGallery() {
-            const categoryName = new URLSearchParams(window.location.search).get('name');
-            const categoryData = photoCategories[categoryName];
+        // --- Apply colors from config ---
+        function applyColors(colors) {
+            if (!colors) return;
+            const root = document.documentElement.style;
+            const map = {
+                primary: '--primary', primaryHover: '--primary-hover', primaryLight: '--primary-light',
+                accent: '--accent', accentHover: '--accent-hover', dark: '--dark', darkSoft: '--dark-soft',
+                surface: '--surface', surfaceAlt: '--surface-alt', text: '--text', textLight: '--text-light',
+            };
+            for (const [key, cssVar] of Object.entries(map)) {
+                if (colors[key]) root.setProperty(cssVar, colors[key]);
+            }
+            if (colors.footerBackground) root.setProperty('--footer-bg', colors.footerBackground);
+        }
 
-            elements.folderNameHeader.textContent = categoryName || 'Gallery';
+        // --- Render footer from config ---
+        function renderFooter(cfg) {
+            const fc = $('footer-container');
+            if (!fc) return;
+            const info = cfg.churchInfo || {};
+            const social = cfg.socialLinks || {};
+            let socialHtml = '';
+            if (social.facebook) socialHtml += `<a href="${social.facebook}" target="_blank" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>`;
+            if (social.instagram) socialHtml += `<a href="${social.instagram}" target="_blank" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>`;
+            if (social.youtube) socialHtml += `<a href="${social.youtube}" target="_blank" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>`;
+            if (info.email) socialHtml += `<a href="mailto:${info.email}" class="social-icon" aria-label="Email"><i class="fas fa-envelope"></i></a>`;
+            fc.innerHTML = `
+                <div class="footer-info">
+                    <p>&copy; ${info.copyrightYear || new Date().getFullYear()} ${info.name || 'Lifeline Church Atlanta'}. All Rights Reserved.</p>
+                    <p>${info.address || ''}</p>
+                </div>
+                <div class="footer-social">${socialHtml}</div>
+            `;
+        }
 
-            if (!categoryData) {
-                elements.photoContainer.innerHTML = '<p>Photo category not found. Please return to the main gallery.</p>';
+        // --- Gallery init ---
+        function initGallery() {
+            folderHeader.textContent = nameParam || 'Gallery';
+
+            if (!folderParam) {
+                photoContainer.innerHTML = '<p>Photo category not found. Please return to the main gallery.</p>';
                 return;
             }
 
-            imagePaths = Array.from({ length: categoryData.fileCount }, (_, i) => 
-                `photos/${categoryData.folder}/${i + 1}.jpg`
-            );
+            fetch('./gallery.json')
+                .then(r => r.ok ? r.json() : Promise.reject(r.status))
+                .then(data => {
+                    const category = data.categories.find(c => c.folder === folderParam);
+                    if (!category || category.files.length === 0) {
+                        photoContainer.innerHTML = '<p>No photos found in this category.</p>';
+                        return;
+                    }
 
-            const images = imagePaths.map((src, index) => {
-                const img = document.createElement('img');
-                img.src = src;
-                img.alt = `${categoryName} photo ${index + 1}`;
-                img.loading = 'lazy';
-                img.addEventListener('click', () => openFullscreen(index));
-                return img;
-            });
+                    imagePaths = category.files.map(f => `photos/${category.folder}/${f}`);
+                    folderHeader.textContent = category.name;
 
-            elements.photoContainer.append(...images);
+                    const fragment = document.createDocumentFragment();
+                    imagePaths.forEach((src, i) => {
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.alt = `${category.name} photo ${i + 1}`;
+                        img.loading = 'lazy';
+                        img.addEventListener('click', () => openLightbox(i));
+                        fragment.appendChild(img);
+                    });
+                    photoContainer.appendChild(fragment);
+                })
+                .catch(() => {
+                    photoContainer.innerHTML = '<p>Could not load gallery data.</p>';
+                });
         }
 
-        function openFullscreen(index) {
+        // --- Lightbox ---
+        function openLightbox(index) {
             currentIndex = index;
-            elements.fullscreenImage.src = imagePaths[currentIndex];
-            elements.modal.style.display = 'flex';
+            fullImg.src = imagePaths[currentIndex];
+            modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
-        function closeFullscreen() {
-            elements.modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
+        function closeLightbox() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
         }
 
-        function changeImage(direction) {
-            currentIndex = direction === 'next' 
-                ? (currentIndex + 1) % imagePaths.length 
+        function navigate(dir) {
+            currentIndex = dir === 1
+                ? (currentIndex + 1) % imagePaths.length
                 : (currentIndex - 1 + imagePaths.length) % imagePaths.length;
-            elements.fullscreenImage.src = imagePaths[currentIndex];
+            fullImg.src = imagePaths[currentIndex];
         }
 
-        elements.closeBtn.addEventListener('click', closeFullscreen);
-        elements.nextBtn.addEventListener('click', (e) => { e.stopPropagation(); changeImage('next'); });
-        elements.prevBtn.addEventListener('click', (e) => { e.stopPropagation(); changeImage('prev'); });
+        $('lightbox-close').addEventListener('click', closeLightbox);
+        $('lightbox-next').addEventListener('click', e => { e.stopPropagation(); navigate(1); });
+        $('lightbox-prev').addEventListener('click', e => { e.stopPropagation(); navigate(-1); });
 
-        elements.modal.addEventListener('click', (e) => {
-            if (e.target === elements.modal) closeFullscreen();
+        modal.addEventListener('click', e => {
+            if (e.target === modal) closeLightbox();
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (elements.modal.style.display === 'flex') {
-                if (e.key === 'Escape') closeFullscreen();
-                if (e.key === 'ArrowRight') changeImage('next');
-                if (e.key === 'ArrowLeft') changeImage('prev');
-            }
+        document.addEventListener('keydown', e => {
+            if (modal.style.display !== 'flex') return;
+            if (e.key === 'Escape') closeLightbox();
+            else if (e.key === 'ArrowRight') navigate(1);
+            else if (e.key === 'ArrowLeft') navigate(-1);
         });
 
-        document.addEventListener('DOMContentLoaded', initializeGallery);
+        // --- Start ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load config for colors and footer
+            fetch('./siteConfig.json')
+                .then(r => r.ok ? r.json() : Promise.reject(r.status))
+                .then(cfg => {
+                    applyColors(cfg.colors);
+                    renderFooter(cfg);
+                })
+                .catch(() => {});
+
+            initGallery();
+        });
+    })();
     </script>
 </body>
 </html>
