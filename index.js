@@ -77,6 +77,7 @@ function renderLanding(cfg) {
         <p>${info.serviceDescription || ''}</p>
         <p><strong>${info.serviceTime || ''}</strong></p>
     `;
+
 }
 
 // --- Populate Welcome / Map Section ------------------------------------------
@@ -275,10 +276,17 @@ function initNavbarScroll(scrollThreshold) {
     const threshold = scrollThreshold || 80;
 
     const onScroll = () => {
-        navbar.classList.toggle('scrolled', window.scrollY > threshold);
+        const currentScroll = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        navbar.classList.toggle('scrolled', currentScroll > threshold);
     };
+    
     window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true }); // Catch html scroll
     onScroll();
+    
+    // Safety checks for programmatic jumps and delayed scroll restoration
+    setTimeout(onScroll, 100);
+    setTimeout(onScroll, 500);
 }
 
 // --- Smooth Scroll -----------------------------------------------------------

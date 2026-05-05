@@ -19,9 +19,9 @@
 
     "churchInfo": {
         "_help": "Basic church information used across the website.",
-        "name": "Lifeline Church Atlanta",
+        "name": "Lifeline Church",
         "tagline": "Reaching the unreached, Churching the unchurched",
-        "serviceDescription": "Join us for our Telugu and English Worship Service every Sunday at 5 PM",
+        "serviceDescription": "Join us for Telugu and English Worship Service",
         "serviceTime": "Sundays at 5 PM",
         "phone": "+1 404-993-7984",
         "email": "connect@lifelinechurchatlanta.org",
