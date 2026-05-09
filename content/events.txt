@@ -1,0 +1,19 @@
+heading: Upcoming Events
+
+title: Sunday Service
+description: Join us every Sunday at 5 PM for worship, message and fellowship.
+
+title: Church's 11th Anniversary
+description: Church Anniversary Service on October 12th
+
+title: Church Picnic
+description: Picnic at "address" on October 18th
+
+title: Men's Fellowship
+description: Wednesday Bible study and prayer for men at 9 PM.
+
+title: Women's Fellowship
+description: Worship Service at 6:30 AM. Intercessory prayer from 8 AM - 10 PM, 11 AM - 12 PM, 2 PM - 3 PM, 6 PM - 7 PM
+
+title: Women's Conference
+description: Worship Service for Women on September 13th

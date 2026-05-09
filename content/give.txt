@@ -1,0 +1,15 @@
+heading: Give
+description: Your generous support helps us reach the unreached with the Gospel of Jesus Christ.
+
+icon: fas fa-mobile-alt
+title: By Text
+text: Text 'Give' to 1-855-790-7485
+
+icon: fas fa-envelope-open-text
+title: By Check
+text: Make payable to 'Lifeline Church' and mail to our address.
+
+icon: fas fa-desktop
+title: Online
+button_text: GIVE ONLINE
+button_url: https://tithe.ly/give_new/www/#/tithely/give-one-time/1293597

@@ -1,0 +1,12 @@
+primary: #4882c2
+primary_hover: #396ba2
+primary_light: #e1eaf4
+accent: #71cde2
+accent_hover: #5bbbd2
+dark: #1e293b
+dark_soft: #334155
+surface: #f4f8fa
+surface_alt: #eaf2f6
+text: #475569
+text_light: #94a3b8
+footer_background: #1e293b

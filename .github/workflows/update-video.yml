@@ -1,0 +1,83 @@
+name: Update Latest YouTube Video
+
+# Runs every Sunday at 3:00 PM EDT (7:00 PM UTC during daylight saving)
+# After daylight saving ends (Nov): 3:00 PM EST = 8:00 PM UTC → change to '0 20 * * 0'
+on:
+  schedule:
+    - cron: '0 19 * * 0'   # 7:00 PM UTC = 3:00 PM EDT (summer)
+  workflow_dispatch:        # Allow manual trigger for testing
+
+permissions:
+  contents: write
+
+jobs:
+  update-video:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch latest YouTube video ID
+        id: fetch_video
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          # Lifeline Church Atlanta channel ID: UC6t04O6_pI8f0S4b-1-s6wQ
+          # Uploads playlist = replace 'UC' with 'UU'
+          UPLOADS_PLAYLIST="UU6t04O6_pI8f0S4b-1-s6wQ"
+
+          RESPONSE=$(curl -s "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${UPLOADS_PLAYLIST}&maxResults=1&key=${YOUTUBE_API_KEY}")
+
+          # Check for API errors
+          ERROR=$(echo "$RESPONSE" | jq -r '.error.message // empty')
+          if [ -n "$ERROR" ]; then
+            echo "❌ YouTube API error: $ERROR"
+            exit 1
+          fi
+
+          VIDEO_ID=$(echo "$RESPONSE" | jq -r '.items[0].snippet.resourceId.videoId // empty')
+          VIDEO_TITLE=$(echo "$RESPONSE" | jq -r '.items[0].snippet.title // empty')
+
+          if [ -z "$VIDEO_ID" ]; then
+            echo "❌ No video found in uploads playlist"
+            exit 1
+          fi
+
+          echo "✅ Latest video: $VIDEO_TITLE ($VIDEO_ID)"
+          echo "video_id=$VIDEO_ID" >> "$GITHUB_OUTPUT"
+          echo "video_title=$VIDEO_TITLE" >> "$GITHUB_OUTPUT"
+
+      - name: Update content/video.txt
+        run: |
+          NEW_ID="${{ steps.fetch_video.outputs.video_id }}"
+          CURRENT_ID=""
+          if [ -f content/video.txt ]; then
+            CURRENT_ID=$(grep -oP 'youtube_video_id:\s*\K\S+' content/video.txt || true)
+          fi
+
+          if [ "$NEW_ID" = "$CURRENT_ID" ]; then
+            echo "ℹ️  Video ID unchanged ($CURRENT_ID), skipping."
+            echo "SKIP=true" >> "$GITHUB_ENV"
+          else
+            echo "🔄 Updating video ID: $CURRENT_ID → $NEW_ID"
+            echo "youtube_video_id: $NEW_ID" > content/video.txt
+            echo "SKIP=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Commit and push changes
+        if: env.SKIP != 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🎥 Auto-update: latest YouTube video (${{ steps.fetch_video.outputs.video_title }})"
+          file_pattern: 'content/video.txt'
+
+      # ──── Deploy to Firebase after updating ────
+      - name: Install Firebase CLI
+        if: env.SKIP != 'true'
+        run: npm install -g firebase-tools
+
+      - name: Deploy to Firebase Hosting
+        if: env.SKIP != 'true'
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --only hosting --token "$FIREBASE_TOKEN"

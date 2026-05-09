@@ -1,0 +1,4 @@
+heading: Happening at Lifeline
+text: Stay connected with our latest sermons and special events. Watch our live stream every Sunday to be a part of our worship experience, no matter where you are.
+link: YouTube Livestream Link | https://www.youtube.com/@LifelineChurchAtlantaGA/streams
+link: Facebook Livestream Link | https://www.facebook.com/profile.php?id=100064841432162&sk=live_videos

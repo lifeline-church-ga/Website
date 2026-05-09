@@ -1,0 +1,11 @@
+slideshow_interval: 6000
+crossfade_speed: 1800
+overlay_opacity_top: 0.55
+overlay_opacity_middle: 0.40
+overlay_opacity_bottom: 0.65
+image_brightness: 0.7
+image_contrast: 0.95
+navbar_scroll_threshold: 80
+scroll_snap: true
+photos_heading: Our Photos
+photos_description: Explore moments from our services, events, and community activities.

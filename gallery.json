@@ -1,28 +1,74 @@
 {
   "categories": [
     {
-      "name": "Worship Services",
-      "folder": "cat1",
+      "name": "Children's Ministry",
+      "folder": "children's ministry",
       "files": [
-        "1.jpg",
-        "2.jpg"
+        "Children_s Sunday.jpg",
+        "Copy of 128.jpg",
+        "Copy of 131.jpg",
+        "JBQ-1.jpg",
+        "JBQ-2.jpg",
+        "TBQ 1.jpg",
+        "TBQ 2.jpg",
+        "TBQ 3.jpg"
       ]
     },
     {
-      "name": "Community Events",
-      "folder": "cat2",
+      "name": "Christmas",
+      "folder": "christmas",
       "files": [
-        "1.jpg",
-        "2.jpg"
+        "Christmas .jpg",
+        "Christmas Service 2.jpg",
+        "Christmas Service 3.jpg",
+        "Christmas Service.jpg"
       ]
     },
     {
-      "name": "Youth Activities",
-      "folder": "cat3",
+      "name": "Church",
+      "folder": "church",
       "files": [
-        "1.jpg",
-        "2.jpg"
+        "Life Groups 1.jpg",
+        "Life Groups 2.jpg",
+        "Lifeline Church-1.jpg",
+        "Lifeline Church-2.jpg",
+        "Lifeline Men.jpg",
+        "Worship 1.jpg",
+        "Worship 2.jpg",
+        "Worship Team.jpg"
+      ]
+    },
+    {
+      "name": "Outreach",
+      "folder": "outreach",
+      "files": [
+        "Carols 1.jpg",
+        "Carols 2.jpg",
+        "Christmas Outreach 2.jpg",
+        "Christmas Outreach 3.jpg",
+        "Christmas Outreach 4.jpg",
+        "Christmas Outreach 4(1).jpg",
+        "Easter Egg Hunt 1.jpg",
+        "Easter Egg Hunt 2.jpg"
+      ]
+    },
+    {
+      "name": "Pastor",
+      "folder": "pastor",
+      "files": [
+        "Joshua-1.JPG",
+        "Pastor Sanjeev_s family.jpg",
+        "Sanjeev-2.jpg",
+        "Sanjeev.jpg"
       ]
     }
+  ],
+  "land_imgs": [
+    "Lifeline Church-1.jpg",
+    "Lifeline Church-2.jpg",
+    "Worship Team.jpg"
+  ],
+  "abt_us_imgs": [
+    "pastor_sanjeev.jpg"
   ]
 }

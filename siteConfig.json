@@ -40,10 +40,7 @@
         "_help": "Content for the 'About Us' section.",
         "heading": "About Us",
         "text": "Lifeline Church is a group of Jesus followers who love God and care about people. We strive to be a channel of Jesus' love to the hurting world around us. Our goal is to build people's spiritual lives and meet their needs through worship, prayer, discipleship, teaching, missions, and church planting.",
-        "images": [
-            "abt_us_imgs/1.jpg",
-            "abt_us_imgs/2.png"
-        ]
+        "_images_note": "About Us images are auto-populated from gallery.json by scan_photos.js — no need to list them here."
     },
 
     "photosSection": {
@@ -141,12 +138,7 @@
     },
 
     "landingSlideshow": {
-        "_help": "Settings for the background slideshow on the homepage hero. 'images' is a list of image file paths in the 'land_imgs' folder. 'intervalMs' is how long each image shows (in milliseconds — 6000 = 6 seconds). 'crossfadeMs' is the transition speed between images.",
-        "images": [
-            "land_imgs/1.jpg",
-            "land_imgs/2.jpg",
-            "land_imgs/3.jpg"
-        ],
+        "_help": "Settings for the background slideshow on the homepage hero. Images are auto-populated from gallery.json by scan_photos.js. 'intervalMs' is how long each image shows (in milliseconds — 6000 = 6 seconds). 'crossfadeMs' is the transition speed between images.",
         "intervalMs": 6000,
         "crossfadeMs": 1800
     },
