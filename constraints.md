@@ -1,12 +1,18 @@
 # Lifeline Church Website — Constraints & Guidelines
 
+## Target Users & Maintainers
+
+- **Website Content Managers:** Non-technical church volunteers. They will update the site entirely through the GitHub web browser interface by editing plain text files in the `content/` folder or uploading images to the `all_photos/` folder. They do not have local development environments, terminal access, or coding knowledge.
+- **Future Developers:** Developers working on the codebase must preserve this simple, browser-editable architecture. Do not introduce complex frameworks that require technical users to build the site locally.
+
 ## Technology Constraints
 
-- **No Node.js, npm, or any server-side runtime.** This is a purely static website — plain HTML, CSS, and vanilla JavaScript only. No build steps, no bundlers, no frameworks.
-- **Exception:** `repoSetup.js` is a Node.js utility script that runs automatically via GitHub Actions whenever photos are uploaded. It is never used at runtime.
-- **No React, Vue, Angular, Next.js, Vite, or similar.** Keep it simple so anyone can edit and deploy it.
-- **No Tailwind CSS or CSS preprocessors (Sass, Less).** Use plain CSS with CSS custom properties (variables) for theming.
-- **No server required to run.** The site should work by opening `frontend/index.html` directly in a browser, or by hosting on GitHub Pages.
+- **The Website (Frontend):** Purely static HTML, CSS, and Vanilla JavaScript.
+  - No React, Vue, Angular, Next.js, Vite, or bundlers. Keep it simple so anyone can edit the raw code if needed.
+  - No Tailwind CSS or CSS preprocessors. Use plain CSS with CSS variables.
+  - The site must be able to run locally by simply double-clicking `frontend/index.html` — no local server required to view the UI.
+- **The Automation (Backend/Build):** We do use Node.js, but strictly for automation via GitHub Actions.
+  - `repoSetup.js` is a Node.js utility script that runs automatically in the cloud via GitHub Actions whenever photos are uploaded. It scans folders and rebuilds `gallery.json`. Volunteers never run this manually.
 
 ## Content Management
 
