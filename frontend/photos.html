@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-snap-type: none;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Photo gallery — Lifeline Church Atlanta community moments.">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; frame-src https://www.youtube.com https://www.google.com;">
+    <title>Photo Gallery - Lifeline Church Atlanta</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+    <header class="navbar scrolled">
+        <div class="container navbar-container">
+            <div class="navbar-left">
+                <img src="icons/logo.jpg" alt="Lifeline Church Logo" width="50" height="50" class="logo">
+                <a href="index.html" class="navbar-title">Lifeline Church</a>
+            </div>
+            <nav class="navbar-right">
+                <a href="index.html#map" class="nav-link">Location</a>
+                <a href="index.html#about-us" class="nav-link">About Us</a>
+                <a href="index.html#photos" class="nav-link">Photos</a>
+                <a href="index.html#events" class="nav-link">Schedule</a>
+                <a href="index.html#ministries" class="nav-link">Ministries</a>
+                <a href="index.html#give" class="nav-link">Give</a>
+            </nav>
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <nav class="mobile-nav" id="mobile-nav">
+            <a href="index.html#map" class="nav-link">Location</a>
+            <a href="index.html#about-us" class="nav-link">About Us</a>
+            <a href="index.html#photos" class="nav-link">Photos</a>
+            <a href="index.html#events" class="nav-link">Schedule</a>
+            <a href="index.html#ministries" class="nav-link">Ministries</a>
+            <a href="index.html#give" class="nav-link">Give</a>
+        </nav>
+    </header>
+
+    <section class="photo-page-header">
+        <div class="container">
+            <a href="index.html#photos" class="back-link"><i class="fas fa-arrow-left"></i> Back to Main Gallery</a>
+            <h1 id="folder-name">Gallery</h1>
+        </div>
+    </section>
+
+    <nav class="category-nav" id="category-nav" aria-label="Photo categories">
+        <div class="category-nav-inner" id="category-nav-inner">
+            <!-- Populated by JS from gallery.json -->
+        </div>
+    </nav>
+
+    <main class="gallery-main">
+        <div class="photo-gallery-grid" id="photo-container"></div>
+    </main>
+
+    <div id="fullscreen-modal" class="fullscreen-modal">
+        <button class="close-btn" id="lightbox-close" aria-label="Close">&times;</button>
+        <button class="nav-arrow prev" id="lightbox-prev" aria-label="Previous">&#10094;</button>
+        <img id="fullscreen-image" class="fullscreen-image" src="" alt="Fullscreen photo">
+        <button class="nav-arrow next" id="lightbox-next" aria-label="Next">&#10095;</button>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-container" id="footer-container">
+            <!-- Populated from siteConfig.json -->
+        </div>
+    </footer>
+
+    <script>
+    /* ================================================================
+       Photos Page — reads gallery.json for actual filenames
+       + reads content/*.txt for colors and footer content
+       ================================================================ */
+    (() => {
+        const $ = id => document.getElementById(id);
+
+        // --- Text file parser ---
+        function parseTxt(text) {
+            const result = {};
+            for (const line of text.split('\n')) {
+                const trimmed = line.trim();
+                if (!trimmed || trimmed.startsWith('#')) continue;
+                const colonIndex = trimmed.indexOf(':');
+                if (colonIndex === -1) continue;
+                const key = trimmed.substring(0, colonIndex).trim();
+                const value = trimmed.substring(colonIndex + 1).trim();
+                result[key] = value;
+            }
+            return result;
+        }
+        function fetchTxt(path) {
+            return fetch(path).then(r => r.ok ? r.text() : '').then(t => parseTxt(t)).catch(() => ({}));
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        let folderParam = params.get('folder') || sessionStorage.getItem('active_folder');
+        let nameParam = params.get('name') || sessionStorage.getItem('active_name');
+
+        const photoContainer = $('photo-container');
+        const folderHeader = $('folder-name');
+        const modal = $('fullscreen-modal');
+        const fullImg = $('fullscreen-image');
+
+        let imagePaths = [];
+        let currentIndex = 0;
+        let activeFolder = folderParam;
+
+        // --- Mobile menu ---
+        const menuBtn = $('mobile-menu-btn');
+        const mobileNav = $('mobile-nav');
+        if (menuBtn && mobileNav) {
+            menuBtn.addEventListener('click', () => mobileNav.classList.toggle('active'));
+            mobileNav.addEventListener('click', e => {
+                if (e.target.classList.contains('nav-link')) mobileNav.classList.remove('active');
+            });
+        }
+
+        // --- Apply colors from config ---
+        function applyColors(colors) {
+            if (!colors) return;
+            const root = document.documentElement.style;
+            const map = {
+                primary: '--primary', primary_hover: '--primary-hover', primary_light: '--primary-light',
+                accent: '--accent', accent_hover: '--accent-hover', dark: '--dark', dark_soft: '--dark-soft',
+                surface: '--surface', surface_alt: '--surface-alt', text: '--text', text_light: '--text-light',
+            };
+            for (const [key, cssVar] of Object.entries(map)) {
+                if (colors[key]) root.setProperty(cssVar, colors[key]);
+            }
+            if (colors.footer_background) root.setProperty('--footer-bg', colors.footer_background);
+        }
+
+        // --- Render footer from config ---
+        function renderFooter(info, social) {
+            const fc = $('footer-container');
+            if (!fc) return;
+            let socialHtml = '';
+            if (social.facebook) socialHtml += `<a href="${social.facebook}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>`;
+            if (social.instagram) socialHtml += `<a href="${social.instagram}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>`;
+            if (social.youtube) socialHtml += `<a href="${social.youtube}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>`;
+            if (info.email) socialHtml += `<a href="mailto:${info.email}" class="social-icon" aria-label="Email"><i class="fas fa-envelope"></i></a>`;
+            fc.innerHTML = `
+                <div class="footer-info">
+                    <p>&copy; ${info.copyright_year || new Date().getFullYear()} ${info.name || 'Lifeline Church Atlanta'}. All Rights Reserved.</p>
+                    <p>${info.address || ''}</p>
+                </div>
+                <div class="footer-social">${socialHtml}</div>
+            `;
+        }
+
+
+        // --- Render category pill tabs ---
+        function renderCategoryNav(categories) {
+            const nav = $('category-nav-inner');
+            if (!nav) return;
+            nav.innerHTML = '';
+            const frag = document.createDocumentFragment();
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-tab' + (cat.folder === activeFolder ? ' active' : '');
+                btn.textContent = cat.name;
+                btn.setAttribute('aria-current', cat.folder === activeFolder ? 'page' : 'false');
+                btn.addEventListener('click', () => {
+                    if (cat.folder === activeFolder) return;
+                    activeFolder = cat.folder;
+                    nav.querySelectorAll('.cat-tab').forEach(b => {
+                        b.classList.remove('active');
+                        b.setAttribute('aria-current', 'false');
+                    });
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-current', 'page');
+                    loadCategory(cat);
+                    const url = new URL(window.location);
+                    url.searchParams.set('folder', cat.folder);
+                    url.searchParams.set('name', cat.name);
+                    window.history.pushState({}, '', url);
+                });
+                frag.appendChild(btn);
+            });
+            nav.appendChild(frag);
+        }
+
+        // --- Load a single category's photos into the grid ---
+        function loadCategory(category) {
+            folderHeader.textContent = category.name;
+            photoContainer.innerHTML = '';
+            imagePaths = [];
+            currentIndex = 0;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (!category.files || category.files.length === 0) {
+                photoContainer.innerHTML = '<p>No photos found in this category.</p>';
+                return;
+            }
+
+            const base = `../all_photos/photos/${category.folder}`;
+            imagePaths = category.files.map(f => `${base}/${f}`);
+
+            const fragment = document.createDocumentFragment();
+            imagePaths.forEach((src, i) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = `${category.name} photo ${i + 1}`;
+                img.loading = 'lazy';
+                img.addEventListener('click', () => openLightbox(i));
+                fragment.appendChild(img);
+            });
+            photoContainer.appendChild(fragment);
+        }
+
+        // --- Gallery init ---
+        function initGallery() {
+            if (!folderParam) {
+                folderHeader.textContent = 'Gallery';
+                photoContainer.innerHTML = '<p>Photo category not found. Please return to the main gallery.</p>';
+                return;
+            }
+
+            fetch('./gallery.json')
+                .then(r => r.ok ? r.json() : Promise.reject(r.status))
+                .then(data => {
+                    renderCategoryNav(data.categories);
+
+                    const category = data.categories.find(c => c.folder === folderParam);
+                    if (!category) {
+                        photoContainer.innerHTML = '<p>No photos found in this category.</p>';
+                        return;
+                    }
+                    loadCategory(category);
+                })
+                .catch(() => {
+                    photoContainer.innerHTML = '<p>Could not load gallery data.</p>';
+                });
+        }
+
+        // --- Lightbox ---
+        function openLightbox(index) {
+            currentIndex = index;
+            fullImg.src = imagePaths[currentIndex];
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function navigate(dir) {
+            currentIndex = dir === 1
+                ? (currentIndex + 1) % imagePaths.length
+                : (currentIndex - 1 + imagePaths.length) % imagePaths.length;
+            fullImg.src = imagePaths[currentIndex];
+        }
+
+        $('lightbox-close').addEventListener('click', closeLightbox);
+        $('lightbox-next').addEventListener('click', e => { e.stopPropagation(); navigate(1); });
+        $('lightbox-prev').addEventListener('click', e => { e.stopPropagation(); navigate(-1); });
+
+        modal.addEventListener('click', e => {
+            if (e.target === modal) closeLightbox();
+        });
+
+        document.addEventListener('keydown', e => {
+            if (modal.style.display !== 'flex') return;
+            if (e.key === 'Escape') closeLightbox();
+            else if (e.key === 'ArrowRight') navigate(1);
+            else if (e.key === 'ArrowLeft') navigate(-1);
+        });
+
+        // --- Start ---
+        document.addEventListener('DOMContentLoaded', () => {
+            window.scrollTo(0, 0);
+
+            // Load content for colors and footer
+            Promise.all([
+                fetchTxt('../content/church_info.txt'),
+                fetchTxt('../content/social_links.txt'),
+                fetchTxt('../content/colors.txt')
+            ]).then(([info, social, colors]) => {
+                applyColors(colors);
+                renderFooter(info, social);
+            }).catch(() => {});
+
+            initGallery();
+        });
+    })();
+    </script>
+</body>
+</html>
