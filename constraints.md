@@ -25,7 +25,7 @@
 |---|---|
 | `church_info.txt` | Church name, tagline, service times, contact info, welcome section |
 | `about_us.txt` | About Us heading and paragraph |
-| `events.txt` | Section heading + event list (blank lines separate events) |
+| `events.txt` | Section heading + event list (blank lines separate events). Optional `flyer:` key per event — see below |
 | `ministries.txt` | Ministries heading, text, and links |
 | `video.txt` | YouTube video ID (auto-updated by GitHub Actions) |
 | `give.txt` | Give section heading, description, and options |
@@ -53,11 +53,24 @@ title: Bible Study
 description: Wednesday evenings at 7 PM.
 ```
 
+### Adding Flyers to Events
+
+To attach a flyer image to any event:
+1. Upload the flyer image to `all_photos/event_flyers/` via the GitHub web interface.
+2. Add a `flyer:` line to the event block in `events.txt` with the exact filename:
+```
+title: Women's Conference
+description: Worship Service for Women on September 13th
+flyer: womens_conference_flyer.jpg
+```
+3. The `flyer:` line is **optional** — events without it display as normal text cards. Events with a flyer will show the image prominently on the card, and visitors can click to view the full flyer.
+
 ## File Structure Rules
 
 - **`all_photos/photos/`** — Contains subfolders for photo gallery categories. Drop images here; the GitHub Action handles the rest.
 - **`all_photos/land_imgs/`** — Hero/landing background slideshow images.
 - **`all_photos/abt_us_imgs/`** — About Us section images.
+- **`all_photos/event_flyers/`** — Event flyer images. Referenced from `events.txt` via the `flyer:` key.
 - **`frontend/`** — Contains the actual website code (`index.html`, `styles.css`, `index.js`), `gallery.json`, and `icons/`.
 - **`content/`** — Editable text files for all website content.
 

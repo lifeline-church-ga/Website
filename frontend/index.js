@@ -200,12 +200,72 @@ function renderEvents(eventsData) {
 
     const fragment = document.createDocumentFragment();
     for (const evt of eventsData.items) {
+        const hasFlyer = !!evt.flyer;
         const box = document.createElement('div');
-        box.className = 'event-box';
-        box.innerHTML = `<h3>${evt.title || ''}</h3><p>${evt.description || ''}</p>`;
+        box.className = hasFlyer ? 'event-box event-box--has-flyer' : 'event-box';
+
+        let flyerHtml = '';
+        if (hasFlyer) {
+            const flyerSrc = `../all_photos/event_flyers/${encodeURIComponent(evt.flyer)}`;
+            flyerHtml = `<div class="event-flyer-wrap">
+                <img src="${flyerSrc}" alt="Flyer for ${escapeHtml(evt.title)}" class="event-flyer" loading="lazy">
+                <span class="event-flyer-zoom" title="View full flyer"><i class="fas fa-expand-alt"></i></span>
+            </div>`;
+        }
+
+        box.innerHTML = `
+            ${flyerHtml}
+            <div class="event-box-text">
+                <h3>${evt.title || ''}</h3>
+                <p>${evt.description || ''}</p>
+            </div>
+        `;
+
+        // Lightbox for flyer on click
+        if (hasFlyer) {
+            const flyerImg = box.querySelector('.event-flyer-wrap');
+            flyerImg.addEventListener('click', () => openFlyerLightbox(
+                `../all_photos/event_flyers/${encodeURIComponent(evt.flyer)}`,
+                evt.title || 'Event Flyer'
+            ));
+        }
+
         fragment.appendChild(box);
     }
     container.appendChild(fragment);
+}
+
+// --- Flyer Lightbox -----------------------------------------------------------
+function openFlyerLightbox(src, title) {
+    // Reuse existing modal or create one
+    let modal = $('flyer-lightbox');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'flyer-lightbox';
+        modal.className = 'flyer-lightbox';
+        modal.innerHTML = `
+            <button class="close-btn flyer-close" aria-label="Close">&times;</button>
+            <img class="flyer-lightbox-img" alt="">
+        `;
+        document.body.appendChild(modal);
+
+        // Close on backdrop click or close button
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal || e.target.closest('.flyer-close')) {
+                modal.style.display = 'none';
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+    const img = modal.querySelector('.flyer-lightbox-img');
+    img.src = src;
+    img.alt = title;
+    modal.style.display = 'flex';
 }
 
 // --- Ministries / Video Section ----------------------------------------------
