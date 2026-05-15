@@ -122,6 +122,36 @@ function escapeHtml(str) {
         .replace(/'/g, '&#39;');
 }
 
+// --- Populate Navbar from content/navbar.txt ---------------------------------
+function renderNavbar(raw) {
+    const desktopNav = $('desktop-nav');
+    const mobileNav = $('mobile-nav');
+    if (!desktopNav || !mobileNav) return;
+
+    // Parse link lines: "link: Label | #section-id"
+    const links = [];
+    for (const line of raw.split('\n')) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('link:')) {
+            const val = trimmed.substring(5).trim();
+            const pipeIdx = val.indexOf('|');
+            if (pipeIdx !== -1) {
+                links.push({
+                    label: val.substring(0, pipeIdx).trim(),
+                    href: val.substring(pipeIdx + 1).trim()
+                });
+            }
+        }
+    }
+
+    const buildLinks = () => links.map(l =>
+        `<a href="${l.href}" class="nav-link">${escapeHtml(l.label)}</a>`
+    ).join('');
+
+    desktopNav.innerHTML = buildLinks();
+    mobileNav.innerHTML = buildLinks();
+}
+
 // --- Populate Landing / Hero Section -----------------------------------------
 function renderLanding(info) {
     const content = document.querySelector('.landing-content');
@@ -663,10 +693,12 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchTxt('content/map.txt'),
         fetchTxt('content/colors.txt'),
         fetchTxt('content/settings.txt'),
-        fetch(nocache('gallery.json')).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+        fetch(nocache('gallery.json')).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+        fetch(nocache('content/navbar.txt')).then(r => r.ok ? r.text() : '').catch(() => '')
     ])
-        .then(([info, aboutUs, events, ministries, video, give, social, mapData, colors, settings, gallery]) => {
+        .then(([info, aboutUs, events, ministries, video, give, social, mapData, colors, settings, gallery, navbarRaw]) => {
             applyColors(colors);
+            renderNavbar(navbarRaw);
             applyHeroDisplay(settings);
             applyScrollSnap(settings);
             renderLanding(info);

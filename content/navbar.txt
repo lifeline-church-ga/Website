@@ -1,0 +1,10 @@
+# Navigation Menu Items
+# Format: link: Label | #section-id
+# To add, remove, or rename a menu item, just edit this file.
+
+link: Location | #map
+link: About Us | #about-us
+link: Schedule | #events
+link: Sermons | #ministries
+link: Photos | #photos
+link: Give | #give
