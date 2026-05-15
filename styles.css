@@ -5,16 +5,16 @@
 
 /* --- Design Tokens --- */
 :root {
-    --primary: #3d6b8e;
-    --primary-hover: #2d5470;
-    --primary-light: #e9f0f5;
-    --accent: #c49a5c;
-    --accent-hover: #b08545;
-    --accent-soft: rgba(196, 154, 92, 0.10);
+    --primary: #4882c2;
+    --primary-hover: #396ba2;
+    --primary-light: #e1eaf4;
+    --accent: #71cde2;
+    --accent-hover: #5bbbd2;
+    --accent-soft: rgba(113, 205, 226, 0.10);
     --dark: #1e293b;
     --dark-soft: #334155;
-    --surface: #f8f7f4;
-    --surface-alt: #f0eeea;
+    --surface: #f4f8fa;
+    --surface-alt: #eaf2f6;
     --text: #475569;
     --text-light: #94a3b8;
     --white: #ffffff;
@@ -607,7 +607,7 @@ a:hover { color: var(--accent); }
     background: var(--accent-hover);
     color: var(--white);
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(196, 154, 92, 0.35);
+    box-shadow: 0 4px 16px rgba(113, 205, 226, 0.35);
 }
 
 /* ============================================================

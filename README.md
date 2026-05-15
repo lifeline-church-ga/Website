@@ -17,12 +17,12 @@ Everything you need to change on the website is located in either the `content` 
 6. Your updates will be live on the website in about 1–2 minutes!
 
 ### 📸 Adding or Removing Photos
-The website will automatically sort your photos into the gallery based on the folder you put them in.
 1. Click on the `all_photos/` folder above.
 2. Choose where you want the photo to go:
    - `photos/` — For the main Photo Gallery (put your photo inside the correct category folder, like `children's ministry` or `church`).
    - `land_imgs/` — For the large background slideshow on the home page.
    - `abt_us_imgs/` — For the photos in the "About Us" section.
+   - `event_flyers/` — For event flyer images.
 3. Once you are inside the folder you want, click **Add file** (near the top right) and select **Upload files**.
 4. Drag and drop your photos into the box.
 5. Click the green **Commit changes** button.
@@ -33,4 +33,4 @@ The website will automatically sort your photos into the gallery based on the fo
 ## For Future Developers 🛠️
 
 If you are a developer inheriting this project, please read `constraints.md` first. 
-This project purposely uses **no frontend frameworks, no bundlers, and no build steps** for the frontend code. The architecture is designed strictly so that non-technical volunteers can manage content via GitHub's web UI, relying on GitHub Actions (`repoSetup.js`) to process photos and deploy static files to GitHub Pages.
+This project purposely uses **no frontend frameworks, no bundlers, and no build steps** for the website code. The architecture is designed strictly so that non-technical volunteers can manage content via GitHub's web UI, relying on GitHub Actions (`scan_photos.js`) to process photos and deploy static files to GitHub Pages.

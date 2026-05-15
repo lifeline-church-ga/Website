@@ -4,7 +4,7 @@
    All content is loaded from plain text files in the content/
    folder so non-coders can edit text easily — no JSON syntax
    needed. Photo lists come from gallery.json (auto-generated
-   by repoSetup.js).
+   by scan_photos.js).
    ============================================================ */
 
 // --- DOM helper ---------------------------------------------------------------
@@ -160,13 +160,13 @@ function renderAboutUs(aboutData, gallery) {
         textEl.innerHTML = `<h2>${aboutData.heading || 'About Us'}</h2><p>${aboutData.text || ''}</p>`;
     }
 
-    // Use images from gallery.json (populated by repoSetup.js)
+    // Use images from gallery.json (populated by scan_photos.js)
     const imgFiles = (gallery && gallery.abt_us_imgs) || [];
     if (imagesEl && imgFiles.length) {
         imagesEl.innerHTML = '';
         imgFiles.forEach((file, i) => {
             const img = document.createElement('img');
-            img.src = `../all_photos/abt_us_imgs/${file}`;
+            img.src = `all_photos/abt_us_imgs/${file}`;
             img.alt = `Church community photo ${i + 1}`;
             img.loading = 'lazy';
             img.width = 220;
@@ -206,7 +206,7 @@ function renderEvents(eventsData) {
 
         let flyerHtml = '';
         if (hasFlyer) {
-            const flyerSrc = `../all_photos/event_flyers/${encodeURIComponent(evt.flyer)}`;
+            const flyerSrc = `all_photos/event_flyers/${encodeURIComponent(evt.flyer)}`;
             flyerHtml = `<div class="event-flyer-wrap">
                 <img src="${flyerSrc}" alt="Flyer for ${escapeHtml(evt.title)}" class="event-flyer" loading="lazy">
                 <span class="event-flyer-zoom" title="View full flyer"><i class="fas fa-expand-alt"></i></span>
@@ -225,7 +225,7 @@ function renderEvents(eventsData) {
         if (hasFlyer) {
             const flyerImg = box.querySelector('.event-flyer-wrap');
             flyerImg.addEventListener('click', () => openFlyerLightbox(
-                `../all_photos/event_flyers/${encodeURIComponent(evt.flyer)}`,
+                `all_photos/event_flyers/${encodeURIComponent(evt.flyer)}`,
                 evt.title || 'Event Flyer'
             ));
         }
@@ -467,11 +467,11 @@ function initLandingSlideshow(settings, gallery) {
     const bgB = $('landing-bg-next');
     if (!bgA || !bgB) return;
 
-    // Build image URLs from gallery.json land_imgs (populated by repoSetup.js)
+    // Build image URLs from gallery.json land_imgs (populated by scan_photos.js)
     const imgFiles = (gallery && gallery.land_imgs) || [];
     const urls = imgFiles.length
-        ? imgFiles.map(f => `../all_photos/land_imgs/${f}`)
-        : ['../all_photos/land_imgs/1.jpg', '../all_photos/land_imgs/2.jpg', '../all_photos/land_imgs/3.jpg'];
+        ? imgFiles.map(f => `all_photos/land_imgs/${f}`)
+        : ['all_photos/land_imgs/1.jpg', 'all_photos/land_imgs/2.jpg', 'all_photos/land_imgs/3.jpg'];
     const interval = parseInt(settings.slideshow_interval) || 6000;
     const transitionMs = parseInt(settings.crossfade_speed) || 1800;
 
@@ -648,17 +648,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load all content files + gallery.json in parallel
     Promise.all([
-        fetchTxt('../content/church_info.txt'),
-        fetchTxt('../content/about_us.txt'),
-        fetchTxtBlocks('../content/events.txt'),
-        fetchMinistriesTxt('../content/ministries.txt'),
-        fetchTxt('../content/video.txt'),
-        fetchTxtBlocks('../content/give.txt'),
-        fetchTxt('../content/social_links.txt'),
-        fetchTxt('../content/map.txt'),
-        fetchTxt('../content/colors.txt'),
-        fetchTxt('../content/settings.txt'),
-        fetch('./gallery.json').then(r => r.ok ? r.json() : {}).catch(() => ({}))
+        fetchTxt('content/church_info.txt'),
+        fetchTxt('content/about_us.txt'),
+        fetchTxtBlocks('content/events.txt'),
+        fetchMinistriesTxt('content/ministries.txt'),
+        fetchTxt('content/video.txt'),
+        fetchTxtBlocks('content/give.txt'),
+        fetchTxt('content/social_links.txt'),
+        fetchTxt('content/map.txt'),
+        fetchTxt('content/colors.txt'),
+        fetchTxt('content/settings.txt'),
+        fetch('gallery.json').then(r => r.ok ? r.json() : {}).catch(() => ({}))
     ])
         .then(([info, aboutUs, events, ministries, video, give, social, mapData, colors, settings, gallery]) => {
             applyColors(colors);

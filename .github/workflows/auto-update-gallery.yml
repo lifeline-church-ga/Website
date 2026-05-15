@@ -1,4 +1,4 @@
-name: Auto-Update Gallery Manifest
+name: Auto-Update Gallery & Deploy
 
 on:
   push:
@@ -6,13 +6,16 @@ on:
       - main
       - master
 
+  # Allow manual trigger from GitHub UI (Actions tab → "Run workflow")
+  workflow_dispatch:
+
 permissions:
   contents: write
   pages: write
   id-token: write
 
 jobs:
-  update-gallery-and-deploy:
+  build-and-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -21,26 +24,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Required to allow the action to commit changes back
           fetch-depth: 0
-          
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Run repoSetup script
-        run: node repoSetup.js
+      # ── Rebuild gallery.json ───────────────────────────────────────────────
+      - name: Scan photos and rebuild gallery.json
+        run: node scan_photos.js
 
-      - name: Commit updated gallery.json
+      # ── Commit updated gallery.json if it changed ──────────────────────────
+      - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: Auto-update gallery.json after photo changes"
-          file_pattern: "frontend/gallery.json"
+          commit_message: "chore: Auto-update gallery.json"
+          file_pattern: "gallery.json"
           commit_user_name: "github-actions[bot]"
           commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
           commit_author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
 
+      # ── Deploy to GitHub Pages ─────────────────────────────────────────────
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
