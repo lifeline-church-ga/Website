@@ -1,5 +1,5 @@
 name: Lifeline Church
-tagline: Reaching the unreached, Churching the unchurched
+tagline: Reaching the unreached<br>Churching the unchurched
 service_description: Join us for worship in English and Telugu
 service_time: Sundays at 5 PM
 phone: +1 404-993-7984
