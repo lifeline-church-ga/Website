@@ -45,6 +45,13 @@ jobs:
           commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
           commit_author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
 
+      # ── Cache busting: stamp build version into asset references ───────────
+      # This runs AFTER the commit step so the git SHA is final.
+      # It modifies files in the working directory only (not committed),
+      # so the deployed site gets versioned URLs while source stays clean.
+      - name: Apply cache busting
+        run: node cache-bust.js
+
       # ── Deploy to GitHub Pages ─────────────────────────────────────────────
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
