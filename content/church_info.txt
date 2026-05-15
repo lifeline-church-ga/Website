@@ -8,4 +8,4 @@ address: 829 Atlanta Highway, Cumming, GA 30040
 copyright_year: 2026
 welcome_heading: WELCOME TO LIFELINE
 schedule_heading: SUNDAY SCHEDULE:
-schedule_text: 5 PM — Telugu and English Worship Service
+schedule_text: 5 PM — Join us for worship in English and Telugu
