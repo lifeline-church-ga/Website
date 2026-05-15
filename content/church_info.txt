@@ -1,6 +1,6 @@
 name: Lifeline Church
 tagline: Reaching the unreached<br>Churching the unchurched
-service_description: Join us for worship in English and Telugu
+service_description: Join us for worship<br>In English and Telugu
 service_time: Sundays at 5 PM
 phone: +1 404-993-7984
 email: connect@lifelinechurchatlanta.org
@@ -8,4 +8,4 @@ address: 829 Atlanta Highway, Cumming, GA 30040
 copyright_year: 2026
 welcome_heading: WELCOME TO LIFELINE
 schedule_heading: SUNDAY SCHEDULE:
-schedule_text: 5 PM — Join us for worship in English and Telugu
+schedule_text: 5 PM — Join us for worship<br>In English and Telugu
