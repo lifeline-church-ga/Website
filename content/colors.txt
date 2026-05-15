@@ -10,3 +10,4 @@ surface_alt: #eaf2f6
 text: #475569
 text_light: #94a3b8
 footer_background: #1e293b
+gold: #71cde2

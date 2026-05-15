@@ -73,6 +73,7 @@ function applyColors(colors) {
         surface_alt:      '--surface-alt',
         text:             '--text',
         text_light:       '--text-light',
+        gold:             '--gold',
     };
     for (const [key, cssVar] of Object.entries(map)) {
         if (colors[key]) root.setProperty(cssVar, colors[key]);
@@ -158,10 +159,12 @@ function renderLanding(info) {
     if (!content || !info.name) return;
 
     content.innerHTML = `
+        <div class="landing-location">${info.location_short || 'CUMMING, GA'}</div>
         <h1>${info.name || ''}</h1>
-        <p>${info.tagline || ''}</p>
-        <p>${info.service_description || ''}</p>
-        <p><strong>${info.service_time || ''}</strong></p>
+        <div class="landing-tagline">${info.tagline || ''}</div>
+        <div class="landing-divider"></div>
+        <div class="landing-service">${info.service_description || ''}</div>
+        <div class="landing-time"><span>${info.service_time || ''}</span></div>
     `;
 }
 
