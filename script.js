@@ -10,6 +10,11 @@
 // --- DOM helper ---------------------------------------------------------------
 const $ = id => document.getElementById(id);
 
+// --- Cache-busting helper ----------------------------------------------------
+// Append a unique timestamp so the browser never serves stale cached content.
+const _cacheBust = `?v=${Date.now()}`;
+function nocache(url) { return url + _cacheBust; }
+
 // --- Text file parsers -------------------------------------------------------
 
 /** Parse a simple key: value text file into an object. */
@@ -38,7 +43,7 @@ function parseTxtBlocks(text) {
 
 /** Fetch a text file and parse as key:value. Returns {} on failure. */
 function fetchTxt(path) {
-    return fetch(path)
+    return fetch(nocache(path))
         .then(r => r.ok ? r.text() : '')
         .then(t => parseTxt(t))
         .catch(() => ({}));
@@ -46,7 +51,7 @@ function fetchTxt(path) {
 
 /** Fetch a text file and parse as blocks. Returns { header:{}, items:[] } on failure. */
 function fetchTxtBlocks(path) {
-    return fetch(path)
+    return fetch(nocache(path))
         .then(r => r.ok ? r.text() : '')
         .then(t => parseTxtBlocks(t))
         .catch(() => ({ header: {}, items: [] }));
@@ -630,7 +635,7 @@ function applyScrollSnap(settings) {
 
 // --- Fetch ministries with raw text preserved for link parsing ----------------
 function fetchMinistriesTxt(path) {
-    return fetch(path)
+    return fetch(nocache(path))
         .then(r => r.ok ? r.text() : '')
         .then(t => {
             const data = parseTxt(t);
@@ -658,7 +663,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchTxt('content/map.txt'),
         fetchTxt('content/colors.txt'),
         fetchTxt('content/settings.txt'),
-        fetch('gallery.json').then(r => r.ok ? r.json() : {}).catch(() => ({}))
+        fetch(nocache('gallery.json')).then(r => r.ok ? r.json() : {}).catch(() => ({}))
     ])
         .then(([info, aboutUs, events, ministries, video, give, social, mapData, colors, settings, gallery]) => {
             applyColors(colors);
