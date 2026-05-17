@@ -11,7 +11,7 @@ description: Worship Service at 6:30 AM. Intercessory prayer from 8 AM - 10 PM, 
 
 title: Revival Meeting
 description: Revival Meeting from July 24th - July 26th with Pastor Edward William Kuntam
-flyer: revival_flyer
+flyer: revival_flyer.jpg
 
 title: Life Groups
 description: Alternate Fridays at 8 PM. Contact us for more information
