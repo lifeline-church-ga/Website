@@ -660,7 +660,7 @@ a:hover {
 
 .event-flyer {
     width: 100%;
-    height: 220px;
+    height: auto;
     object-fit: cover;
     transition: transform 0.4s var(--ease);
 }
