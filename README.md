@@ -8,7 +8,7 @@ This website was built specifically so that **anyone** can update the site direc
 
 Everything you need to change on the website is located in either the `content` folder (for text) or the `all_photos` folder (for pictures). 
 
-### 📝 Changing Text (Schedules, Information, Contact, etc.)
+### Changing Text (Schedules, Information, Contact, etc.)
 1. Click on the `content/` folder above.
 2. Click on the text file you want to edit (for example, `events.txt`).
 3. Click the **Pencil Icon** (✏️) in the top right corner of the file box to edit the file.
@@ -16,7 +16,7 @@ Everything you need to change on the website is located in either the `content` 
 5. Click the green **Commit changes...** button in the top right corner.
 6. Your updates will be live on the website in about 1–2 minutes!
 
-### 📸 Adding or Removing Photos
+### Adding or Removing Photos
 1. Click on the `all_photos/` folder above.
 2. Choose where you want the photo to go:
    - `photos/` — For the main Photo Gallery (put your photo inside the correct category folder, like `children's ministry` or `church`).
@@ -30,7 +30,7 @@ Everything you need to change on the website is located in either the `content` 
 
 ---
 
-## For Future Developers 🛠️
+## For Future Developers
 
 If you are a developer inheriting this project, please read `constraints.md` first. 
 This project purposely uses **no frontend frameworks, no bundlers, and no build steps** for the website code. The architecture is designed strictly so that non-technical volunteers can manage content via GitHub's web UI, relying on GitHub Actions (`scan_photos.js`) to process photos and deploy static files to GitHub Pages.
