@@ -195,7 +195,8 @@ function renderAboutUs(aboutData, gallery) {
     const imagesEl = document.querySelector('.about-images');
 
     if (textEl && aboutData) {
-        textEl.innerHTML = `<h2>${aboutData.heading || 'About Us'}</h2><p>${aboutData.text || ''}</p>`;
+        textEl.innerHTML = `<h2>${aboutData.heading || 'About Us'}</h2><p>${aboutData.text || ''}</p>
+            <a href="beliefs.html" class="btn btn-beliefs">Our Beliefs</a>`;
     }
 
     // Use images from gallery.json (populated by scan_photos.js)
@@ -212,6 +213,47 @@ function renderAboutUs(aboutData, gallery) {
             imagesEl.appendChild(img);
         });
     }
+}
+
+// --- Populate Our Beliefs ----------------------------------------------------
+function renderBeliefs(beliefsData) {
+    const section = document.getElementById('beliefs');
+    const grid = document.getElementById('beliefs-grid');
+    if (!section || !grid) return;
+
+    const container = section.querySelector('.container');
+
+    // Build header (heading + description)
+    let headerHtml = '';
+    if (beliefsData.header.heading) {
+        headerHtml += `<h2>${escapeHtml(beliefsData.header.heading)}</h2>`;
+    }
+    if (beliefsData.header.description) {
+        headerHtml += `<p class="beliefs-description">${escapeHtml(beliefsData.header.description)}</p>`;
+    }
+
+    // Insert header before the grid
+    if (headerHtml) {
+        grid.insertAdjacentHTML('beforebegin', headerHtml);
+    }
+
+    // Build belief cards
+    const fragment = document.createDocumentFragment();
+    for (const item of beliefsData.items) {
+        const card = document.createElement('div');
+        card.className = 'belief-card';
+        let cardHtml = '';
+        if (item.icon) {
+            cardHtml += `<div class="belief-icon"><i class="${escapeHtml(item.icon)}"></i></div>`;
+        }
+        if (item.title) {
+            cardHtml += `<h3>${escapeHtml(item.title)}</h3>`;
+        }
+        cardHtml += `<p>${escapeHtml(item.text || '')}</p>`;
+        card.innerHTML = cardHtml;
+        fragment.appendChild(card);
+    }
+    grid.appendChild(fragment);
 }
 
 // --- Populate Photos Section Header ------------------------------------------
@@ -688,6 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Promise.all([
         fetchTxt('content/church_info.txt'),
         fetchTxt('content/about_us.txt'),
+        fetchTxtBlocks('content/beliefs.txt'),
         fetchTxtBlocks('content/events.txt'),
         fetchMinistriesTxt('content/ministries.txt'),
         fetchTxt('content/video.txt'),
@@ -699,7 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(nocache('gallery.json')).then(r => r.ok ? r.json() : {}).catch(() => ({})),
         fetch(nocache('content/navbar.txt')).then(r => r.ok ? r.text() : '').catch(() => '')
     ])
-        .then(([info, aboutUs, events, ministries, video, give, social, mapData, colors, settings, gallery, navbarRaw]) => {
+        .then(([info, aboutUs, beliefs, events, ministries, video, give, social, mapData, colors, settings, gallery, navbarRaw]) => {
             applyColors(colors);
             renderNavbar(navbarRaw);
             applyHeroDisplay(settings);
@@ -707,6 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderLanding(info);
             renderMapSection(info, mapData);
             renderAboutUs(aboutUs, gallery);
+            renderBeliefs(beliefs);
             renderPhotosHeader(settings);
             renderPhotoGallery(gallery);
             renderEvents(events);

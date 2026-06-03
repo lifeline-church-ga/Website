@@ -527,6 +527,98 @@ a:hover {
     color: var(--text);
 }
 
+.btn-beliefs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    background: var(--primary);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.03em;
+    margin-top: 0.5rem;
+    transition: background 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.btn-beliefs:hover {
+    background: var(--primary-hover);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(72, 130, 194, 0.3);
+}
+
+.btn-beliefs i {
+    font-size: 0.85rem;
+}
+
+/* ============================================================
+   OUR BELIEFS
+   ============================================================ */
+.beliefs-description {
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    font-size: 1.05rem;
+    color: var(--text);
+}
+
+.beliefs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.belief-card {
+    background: var(--white);
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-xs);
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.belief-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.belief-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+.belief-card:hover .belief-icon {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.belief-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.belief-card p {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
 /* ============================================================
    GALLERY — Clean photo category cards
    ============================================================ */
@@ -1120,6 +1212,15 @@ a:hover {
 
     .about-images {
         margin-bottom: 1rem;
+    }
+
+    .about-text {
+        text-align: center;
+    }
+
+    .about-text .btn-beliefs {
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .video-container iframe {

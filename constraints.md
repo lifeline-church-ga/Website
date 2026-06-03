@@ -25,6 +25,7 @@
 |---|---|
 | `church_info.txt` | Church name, tagline, service times, contact info, welcome section |
 | `about_us.txt` | About Us heading and paragraph |
+| `beliefs.txt` | Beliefs heading, description, and list of core beliefs |
 | `events.txt` | Section heading + event list (blank lines separate events). Optional `flyer:` key per event — see below |
 | `ministries.txt` | Ministries heading, text, and links |
 | `video.txt` | YouTube video ID (auto-updated by GitHub Actions) |

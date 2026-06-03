@@ -4,6 +4,7 @@
 
 link: Location | #map
 link: About Us | #about-us
+link: Beliefs | beliefs.html
 link: Schedule | #events
 link: Sermons | #ministries
 link: Photos | #photos
