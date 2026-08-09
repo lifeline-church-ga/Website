@@ -13,10 +13,6 @@ title: Church 12th Anniversary
 description: Church 12th Anniversary 
 flyer: 12th Anniversary Service Flyer.jpg
 
-title: Revival Meeting
-description: Revival Meeting from July 24th - July 26th with Pastor Edward William Kuntam
-flyer: Lifeline Revival Meetings 2026.jpg
-
 title: Life Groups
 description: Alternate Fridays at 8 PM. Contact us for more information
 flyer: LifeGroups_08_02_2026.jpg
