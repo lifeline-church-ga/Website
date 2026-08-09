@@ -19,4 +19,4 @@ flyer: Lifeline Revival Meetings 2026.jpg
 
 title: Life Groups
 description: Alternate Fridays at 8 PM. Contact us for more information
-flyer: life_group_flyer.png
+flyer: LifeGroups_08_02_2026.jpg
