@@ -9,6 +9,10 @@ description: Wednesday Bible study and prayer for men at 9 PM
 title: Women's Fellowship
 description: Worship Service at 6:30 AM. Intercessory prayer from 8 AM - 10 PM, 11 AM - 12 PM, 2 PM - 3 PM, 6 PM - 7 PM
 
+title:  Lifeline Church Women's Conference  
+description: Women's conference
+flyer: Lifeline Womens Conference Final.jpg
+
 title: Church 12th Anniversary 
 description: Church 12th Anniversary 
 flyer: 12th Anniversary Service Flyer.jpg
