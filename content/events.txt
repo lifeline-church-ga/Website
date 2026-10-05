@@ -9,13 +9,15 @@ description: Wednesday Bible study and prayer for men at 9 PM
 title: Women's Fellowship
 description: Worship Service at 6:30 AM. Intercessory prayer from 8 AM - 10 PM, 11 AM - 12 PM, 2 PM - 3 PM, 6 PM - 7 PM
 
-title: Church 12th Anniversary 
-description: Church 12th Anniversary 
-flyer: 12th Anniversary Service Flyer.jpg
 
 title: Lifeline Picnic
 description: Church Picnic 
 flyer: 2026 Lifeline Picnic.jpg
+
+
+title: Thanksgiving Service
+description: Thanksgiving Service
+flyer: 2026 Thanksgiving Service.jpg
 
 title: Life Groups
 description: Alternate Fridays at 8 PM. Contact us for more information
